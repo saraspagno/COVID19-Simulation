@@ -52,4 +52,8 @@ def generation(board):
 
 if __name__ == '__main__':
     board = Board.Board(R=constant.R, N=constant.N, sick_creatures=constant.D)
-    generation(board)
+    gen = 0
+    while True:
+        print("Generation: ", gen)
+        gen += 1
+        generation(board)

@@ -38,7 +38,7 @@ class Cell(object):
         """
         self.place_x = (self.place_x + random.randint(move[0], move[1])) % SIZE[1]
         self.place_y = (self.place_y + random.randint(move[0], move[1])) % SIZE[0]
-        return [self.place_x, self.place_y]
+        return self.place_x, self.place_y
 
     # def find_new_place(self, size=SIZE):
     #     x_range = (-min(size[0], self.place_x), min(SIZE[0] - self.place_x, size[0] -1))
@@ -54,10 +54,10 @@ class Cell(object):
         :param move: the range of movement, either regular=1, or fast (R creturs)=10
         :return:
         """
-        new_place = self.find_new_place(move)
-        while board[new_place] != States.EMPTY:
+        new_x, new_y = self.find_new_place(move)
+        while board[new_x][new_y] != States.EMPTY:
             self.find_new_place(move)
-        self.set_location(new_place)
+        self.set_location(new_x, new_y)
 
     def infect_by_neighbors_states(self, board, probability_of_infection):
         """
@@ -90,8 +90,8 @@ class Cell(object):
     def get_state(self):
         return self.state
 
-    def set_location(self, new_place):
-        self.place_x, self.place_y = new_place
+    def set_location(self, place_x, place_y):
+        self.place_x, self.place_y = place_x, place_y
 
     def get_location(self):
         return self.place_x, self.place_y
