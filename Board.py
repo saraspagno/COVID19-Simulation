@@ -67,6 +67,10 @@ class Board(object):
 
 
     def print_board(self):
+        """
+            you need to make this work, this is not it!!
+        :return:
+        """
         for j in range(SIZE[0]):
             for i in range(SIZE[1]):
                 if self.board[i, j] != None:

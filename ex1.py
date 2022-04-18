@@ -11,7 +11,6 @@ FASTER_MOVEMENT = constant.FASTER_MOVEMENT
 
 def show_board(board):
     """
-    you need to make this work, this is not it!!
     :param board:
     :return:
     """
