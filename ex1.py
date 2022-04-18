@@ -24,6 +24,7 @@ def move(self):
         creature.check_location(new_board, move=(-creature.range,creature.range))
         new_board[creature.place_x, creature.place_y]=creature.state
     return new_board
+def generation():
 
 
 if __name__ == '__main__':

@@ -44,16 +44,20 @@ class Cell(object):
 
     def neighbors_states(self, table):
         if self.state == States.SICK:
-            if self.generation_num
-            self.generation_num += 1
-        neighbors = [-1, 0, 1]
-        neighbors_sick = 0
-        for i in neighbors:
-            for j in neighbors:
-                place_x = self.place_x + i
-                place_y = self.place_y + j
-                if table[place_x, place_y] == States.SICK:
-                    neighbors_sick += 1
+            if self.generation_num == constant.X:
+                self.state = States.RECOVERED
+            else:
+                self.generation_num += 1
+        elif self.state == States.HEALTHY:
+            neighbors = [-1, 0, 1]
+            neighbors_sick = 0
+            for i in neighbors:
+                for j in neighbors:
+                    place_x = self.place_x + i
+                    place_y = self.place_y + j
+                    if table[place_x, place_y] == States.SICK:
+                        neighbors_sick += 1
+            if neighbors_sick*constant
 
 
     def set_state(self, state):
