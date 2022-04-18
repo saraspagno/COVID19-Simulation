@@ -10,30 +10,24 @@ class States(Enum):
     RECOVERED = 3
 
 
-SIZE = (200, 200)
-N = 100
-D = 15
-R = 0.1
-X = 10
-P_1 = 0.01
-P_2 = 0.005
-T = 0.6
+SIZE = (200, 200)  # size of the automata
+N = 100  # number of creatures
+D = 15  # number of infected cells at start time
+R = 0.1  #
+X = 10  # number of generations until recovery
+P_1 = 0.01  # infection probability when infected are low (therefore is high)
+P_2 = 0.005  # infection probability when infected are high (therefore is low)
+T = 0.6  # threshold percentage value for when to change P
 FASTER = 10
 
 
 class Cell(object):
-    """
-    """
-
-    def __init__(self, table, **kwargs):
-        self.set_defaults(table, **kwargs)
+    def __init__(self, table, state=0):
         self.print_new_cell()
-
-    def set_defaults(self, table, state=0, range=1):
         self.update = False
         self.range = range
-        self.place_x = 0
-        self.place_y = 0
+        self.x = 0
+        self.y = 0
         self.check_location(table)
         self.state = state
 
@@ -41,36 +35,36 @@ class Cell(object):
         raise NotImplementedError
 
     def find_new_place(self, size=SIZE):
-        x_range = (-min(size[0], self.place_x), min(SIZE[0] - self.place_x, size[0] - 1))
-        y_range = (-min(self.place_y, size[1]), min(SIZE[1] - self.place_y, size[1] - 1))
+        x_range = (-min(size[0], self.x), min(SIZE[0] - self.x, size[0] - 1))
+        y_range = (-min(self.y, size[1]), min(SIZE[1] - self.y, size[1] - 1))
         return [random.randint(x_range[0], x_range[1]), random.randint(y_range[0], y_range[1])]
 
     def check_location(self, table, size=SIZE):
         new_place = self.find_new_place()
-        while table[new_place[0]][new_place[1]] != None:
+        while table[new_place[0]][new_place[1]] is not None:
             self.find_new_place(size)
-        self.place_x, self.place_y = new_place
+        self.x, self.y = new_place
 
     def set_state(self, state):
         self.state = state
 
     def get_location(self):
-        return (self.place_x, self.place_y)
+        return self.x, self.y
 
     def load(self):
         raise NotImplementedError
 
     def update(self, N):
-        current_place = (self.place_x, self.place_y)
-        self.place_x = random.randint(-self.range, self.range)
-        self.place_y = random.randint(-self.range, self.range)
+        current_place = (self.x, self.y)
+        self.x = random.randint(-self.range, self.range)
+        self.y = random.randint(-self.range, self.range)
         if self.update:
             self.N += 1
         if self.N == N:
             self.N = 0
 
     def print_new_cell(self):
-        print("new ", self.state, " at ", self.place_x, self.place_y, "with movement capabil;ities of ", self.range)
+        print("new ", self.state, " at ", self.x, self.y, "with movement capabil;ities of ", self.range)
 
 
 class Board(object):
@@ -109,11 +103,11 @@ class Board(object):
             cell = Cell(self.board, state=state, range=FASTER)
             # cell=pd.DataFrame({"place": [place], "range":[FASTER], "state": [state]})
 
-            self.board[cell.place_x, cell.place_y] = cell.state
+            self.board[cell.x, cell.y] = cell.state
             self.creatures.append(cell)
         for state in states[N * D:]:
             cell = Cell(self.board, state=state)
-            self.board[cell.place_x, cell.place_y] = cell.state
+            self.board[cell.x, cell.y] = cell.state
             self.creatures.append(cell)
 
     #
@@ -133,7 +127,7 @@ class Board(object):
 
     def check_location(self, place=(0, 0), size=SIZE):
         new_place = self.find_new_place(place)
-        while self.board[new_place[0]][new_place[1]] != None:
+        while self.board[new_place[0]][new_place[1]] is not None:
             self.find_new_place(place, size)
         return new_place
 
