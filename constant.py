@@ -21,8 +21,8 @@ class States(IntEnum):
 
 SIZE = (200, 200)
 
-N = 150  # number of creatures
-D = 100  # number of cells infected at start time
+N = 10000  # number of creatures
+D = 1000  # number of cells infected at start time
 R = 0.1  # percentage of creatures that move faster
 REGULAR_MOVEMENT = 1  # the regular movement
 FASTER_MOVEMENT = 10  # the faster movement
