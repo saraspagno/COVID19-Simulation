@@ -56,7 +56,7 @@ class Cell(object):
         """
         new_x, new_y = self.find_new_place(move)
         while board[new_x][new_y] != States.EMPTY:
-            self.find_new_place(move)
+            new_x, new_y = self.find_new_place(move)
         self.set_location(new_x, new_y)
 
     def infect_by_neighbors_states(self, board, probability_of_infection):
