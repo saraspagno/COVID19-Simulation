@@ -21,12 +21,12 @@ class States(IntEnum):
 
 SIZE = (200, 200)
 
-N = 10000  # number of creatures
-D = 1000  # number of cells infected at start time
+N = 8000  # number of creatures
+D = 10  # number of cells infected at start time
 R = 0.1  # percentage of creatures that move faster
 REGULAR_MOVEMENT = 1  # the regular movement
 FASTER_MOVEMENT = 10  # the faster movement
-X = 10  # number of generations until recovery
-P_1 = 0.9  # probability of infection during low infections
-P_2 = 0.9  # probability of infection during high infections
-T = 0.6  # threshold value for the change of P as a function of the disease state
+X = 15  # number of generations until recovery
+P_1 = 0.1  # probability of infection during low infections
+P_2 = 0.7  # probability of infection during high infections
+T = 0.8  # threshold value for the change of P as a function of the disease state

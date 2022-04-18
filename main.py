@@ -5,8 +5,11 @@ import Board
 import constant
 
 import matplotlib.cm as cm
+import matplotlib
+from matplotlib.lines import Line2D
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+matplotlib.use('Qt5Agg')
 
 SIZE = constant.SIZE
 States = constant.States
@@ -36,7 +39,6 @@ def move(board):
 
 
 def generation(d):
-    print("NEW GEN")
     """
     this method represents a generation in the population's life
         in each generation the creatures move (according to their movement capabilities)
@@ -77,10 +79,21 @@ if __name__ == '__main__':
 
     grid = board.board
     grid[0, 0] = 3
+
     fig, ax = plt.subplots()
     ax.axis('off')
     row = 0
+
+    white_empty = Line2D([], [], marker="s", markersize=5, linewidth=0, color="w")
+    green_healthy = Line2D([], [], marker="s", markersize=5, linewidth=0, color="g")
+    red_infected = Line2D([], [], marker="s", markersize=5, linewidth=0, color="r")
+    blue_recovered = Line2D([], [], marker="s", markersize=5, linewidth=0, color="b")
+    ax.legend((white_empty, green_healthy, red_infected, blue_recovered), ('Empty', 'Healthy', 'Infected', 'Recovered'), loc='upper left')
+
     cmap = ListedColormap(['w', 'g', 'r', 'b'])
     mat = ax.matshow(grid, cmap=cmap)
-    ani = animation.FuncAnimation(fig, generation, frames=99, interval=60, save_count=50, repeat=False)
+    ani = animation.FuncAnimation(fig, generation, interval=80, save_count=50, repeat=False)
+
+    figManager = plt.get_current_fig_manager()
+    figManager.window.showMaximized()
     plt.show()
