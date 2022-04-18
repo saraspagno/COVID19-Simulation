@@ -46,7 +46,7 @@ def generation(board):
         probability_of_infection = constant.P_1
     move(board)
     for creature in board.creatures.values():
-        creature.infect_by_neighbors_states(board, probability_of_infection)
+        creature.infect_by_neighbors_states(board.board, probability_of_infection)
     show_board(board)
 
 
