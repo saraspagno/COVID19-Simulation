@@ -1,5 +1,16 @@
 from enum import Enum
 
+'''
+some global parameters:
+    SIZE - the size of the board
+    N - number of creatures
+    D - number of cells infected at start time
+    R - percentage of creatures that can move faster
+    X - number of generations until recovery
+    P_1, P_2 - probability of infection during high and low infections
+    T - threshold value for the change of P as a function of the disease state
+'''
+
 class States(Enum):
     EMPTY = 0
     HEALTHY = 1
