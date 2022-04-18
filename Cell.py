@@ -76,8 +76,8 @@ class Cell(object):
             neighbors_sick = 0
             for i in neighbors:
                 for j in neighbors:
-                    place_x = self.place_x + i
-                    place_y = self.place_y + j
+                    place_x = (self.place_x + i) % SIZE[1]
+                    place_y = (self.place_y + j) % SIZE[0]
                     if board[place_x, place_y] == States.SICK:
                         neighbors_sick += 1
             probability_of_infection = neighbors_sick * probability_of_infection
