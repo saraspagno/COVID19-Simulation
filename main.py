@@ -9,20 +9,13 @@ import matplotlib
 from matplotlib.lines import Line2D
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+
 matplotlib.use('Qt5Agg')
 
 SIZE = constant.SIZE
 States = constant.States
 REGULAR_MOVEMENT = constant.REGULAR_MOVEMENT
 FASTER_MOVEMENT = constant.FASTER_MOVEMENT
-
-
-def show_board(board):
-    """
-    :param board:
-    :return:
-    """
-    board.print_board()
 
 
 def move(board):
@@ -57,25 +50,16 @@ def generation(d):
     for creature in board.creatures.values():
         creature.infect_by_neighbors_states(board.board, probability_of_infection)
 
-    # show_board(board)
-
     global grid
     grid = board.board
     mat.set_data(grid)
     return mat
 
 
-
-
-
 if __name__ == '__main__':
     board = Board.Board(R=constant.R, N=constant.N, sick_creatures=constant.D)
     gen = 0
     print("After init!")
-    # while True:
-    #     print("Generation: ", gen)
-    #     gen += 1
-    #     generation()
 
     grid = board.board
     grid[0, 0] = 3
@@ -88,7 +72,8 @@ if __name__ == '__main__':
     green_healthy = Line2D([], [], marker="s", markersize=5, linewidth=0, color="g")
     red_infected = Line2D([], [], marker="s", markersize=5, linewidth=0, color="r")
     blue_recovered = Line2D([], [], marker="s", markersize=5, linewidth=0, color="b")
-    ax.legend((white_empty, green_healthy, red_infected, blue_recovered), ('Empty', 'Healthy', 'Infected', 'Recovered'), loc='upper left')
+    ax.legend((white_empty, green_healthy, red_infected, blue_recovered), ('Empty', 'Healthy', 'Infected', 'Recovered'),
+              loc='upper left')
 
     cmap = ListedColormap(['w', 'g', 'r', 'b'])
     mat = ax.matshow(grid, cmap=cmap)
