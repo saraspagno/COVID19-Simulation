@@ -3,6 +3,8 @@ import random
 
 SIZE = constant.SIZE
 States = constant.States
+
+
 class Cell(object):
     """
     this class represents a creature
@@ -14,22 +16,17 @@ class Cell(object):
         generation_num: the numbers of generations a creature has been sick (after 10 generations it is recovered)
     """
 
-    def __init__(self, table, **kwargs):
-        self.set_defaults(table,**kwargs)
-        self.print_new_cell()
-
-    def set_defaults(self, table, state, range ):
-        self.range = range
-        self.place_x=0
-        self.place_y=0
+    def __init__(self, table, state, movement):
+        self.range = movement
+        self.place_x = 0
+        self.place_y = 0
         self.check_location(table, move=(0, SIZE[0]))
         self.state = state
         if state == States.SICK:
             self.generation_num = 1
         else:
             self.generation_num = 0
-
-        # self.neighbors
+        self.print_new_cell()
 
     def find_new_place(self, move):
         """
@@ -42,7 +39,6 @@ class Cell(object):
         self.place_x = (self.place_x + random.randint(move[0], move[1])) % SIZE[1]
         self.place_y = (self.place_y + random.randint(move[0], move[1])) % SIZE[0]
         return [self.place_x, self.place_y]
-
 
     # def find_new_place(self, size=SIZE):
     #     x_range = (-min(size[0], self.place_x), min(SIZE[0] - self.place_x, size[0] -1))
@@ -88,9 +84,6 @@ class Cell(object):
             weights = [1 - probability_of_infection, probability_of_infection]
             self.set_state(random.choices([States.HEALTHY, States.SICK], weights=weights, k=1))
 
-
-
-
     def set_state(self, state):
         self.state = state
 
@@ -101,7 +94,7 @@ class Cell(object):
         self.place_x, self.place_y = new_place
 
     def get_location(self):
-        return (self.place_x, self.place_y)
+        return self.place_x, self.place_y
 
     def print_new_cell(self):
         print("new ", self.state, " at ", self.place_x, self.place_y, "with movement capabilities of ", self.range)
