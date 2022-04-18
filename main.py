@@ -1,6 +1,12 @@
 import numpy as np
+from matplotlib.colors import ListedColormap
+
 import Board
 import constant
+
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 SIZE = constant.SIZE
 States = constant.States
@@ -29,7 +35,8 @@ def move(board):
     return new_board
 
 
-def generation(board):
+def generation(d):
+    print("NEW GEN")
     """
     this method represents a generation in the population's life
         in each generation the creatures move (according to their movement capabilities)
@@ -44,16 +51,36 @@ def generation(board):
         probability_of_infection = constant.P_2
     else:
         probability_of_infection = constant.P_1
-    move(board)
+    board.board = move(board)
     for creature in board.creatures.values():
-        creature.infect_by_neighbors_states(board, probability_of_infection)
-    show_board(board)
+        creature.infect_by_neighbors_states(board.board, probability_of_infection)
+
+    # show_board(board)
+
+    global grid
+    grid = board.board
+    mat.set_data(grid)
+    return mat
+
+
+
 
 
 if __name__ == '__main__':
     board = Board.Board(R=constant.R, N=constant.N, sick_creatures=constant.D)
     gen = 0
-    while True:
-        print("Generation: ", gen)
-        gen += 1
-        generation(board)
+    print("After init!")
+    # while True:
+    #     print("Generation: ", gen)
+    #     gen += 1
+    #     generation()
+
+    grid = board.board
+    grid[0, 0] = 3
+    fig, ax = plt.subplots()
+    ax.axis('off')
+    row = 0
+    cmap = ListedColormap(['w', 'g', 'r', 'b'])
+    mat = ax.matshow(grid, cmap=cmap)
+    ani = animation.FuncAnimation(fig, generation, frames=99, interval=60, save_count=50, repeat=False)
+    plt.show()

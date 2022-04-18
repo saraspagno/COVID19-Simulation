@@ -27,7 +27,7 @@ class Board(object):
         :param sick_creatures: number of cells infected at start time (represented as D in the constants)
         """
         self.creatures = {}
-        self.board = np.array([[States.EMPTY for i in range(SIZE[0])] for j in range(SIZE[1])])
+        self.board = np.array([[int(States.EMPTY) for i in range(SIZE[0])] for j in range(SIZE[1])])
         self.sick_creatures = sick_creatures
         self.initiate_board(R, N)
 
@@ -50,11 +50,11 @@ class Board(object):
 
         # initiate board with the drawn ranges where D creatures are sick and the rest are healthy
         for movement in movements[0:self.sick_creatures - 1]:
-            cell = Cell.Cell(self.board, state=States.SICK, movement=movement)
+            cell = Cell.Cell(self.board, state=int(States.SICK), movement=movement)
             self.board[cell.place_x, cell.place_y] = cell.state
             self.creatures[(cell.place_x, cell.place_y)] = cell
         for movement in movements[self.sick_creatures:]:
-            cell = Cell.Cell(self.board, state=States.HEALTHY, movement=movement)
+            cell = Cell.Cell(self.board, state=int(States.HEALTHY), movement=movement)
             self.board[cell.place_x, cell.place_y] = cell.state
             self.creatures[(cell.place_x, cell.place_y)] = cell
 
@@ -66,7 +66,7 @@ class Board(object):
         for j in range(SIZE[0]):
             for i in range(SIZE[1]):
                 if self.board[i, j] is not None:
-                    print(self.board[i, j].state, end="|")
+                    print(self.board[i, j], end="|")
                 else:
                     print("None", end="|")
             print("\n")
