@@ -47,18 +47,22 @@ class Board(object):
         movements = random.choices([REGULAR_MOVEMENT, FASTER_MOVEMENT], weights=[1 - R, R], k=N)
 
         # initiate board with the drawn ranges where D creatures are sick and the rest are healthy
-        for movement in movements[0:self.sick_creatures - 1]:
+        for movement in movements[0:self.sick_creatures]:
             cell = Cell.Cell(self.board, state=States.SICK, movement=movement)
             self.change_state_in_cell([cell.place_x, cell.place_y], cell.state)
-            self.set_creatures_list([cell.place_x, cell.place_y], cell)
+            # self.set_creatures_list([cell.place_x, cell.place_y], cell)
             # self.board[cell.place_x, cell.place_y] = cell.state
-            # self.creatures[(cell.place_x, cell.place_y)] = cell
+            self.creatures[(cell.place_x, cell.place_y)] = cell
+            print(len(self.creatures), "creatures, the newest is a  ", cell.state.name, "cell at (", cell.place_x,
+                  cell.place_y, ") with movement capabilities of ", cell.range)
         for movement in movements[self.sick_creatures:]:
             cell = Cell.Cell(self.board, state=States.HEALTHY, movement=movement)
             self.change_state_in_cell([cell.place_x, cell.place_y], cell.state)
-            self.set_creatures_list([cell.place_x, cell.place_y], cell)
+            # self.set_creatures_list([cell.place_x, cell.place_y], cell)
             # self.board[cell.place_x, cell.place_y] = cell.state
-            # self.creatures[(cell.place_x, cell.place_y)] = cell
+            self.creatures[(cell.place_x, cell.place_y)] = cell
+            print(len(self.creatures), "creatures, the newest is a  ", cell.state.name, "cell at (", cell.place_x,
+                  cell.place_y, ") with movement capabilities of ", cell.range)
 
     def set_num_of_sick(self, new_num):
         self.sick_creatures = new_num
@@ -68,6 +72,9 @@ class Board(object):
 
     def set_creatures_list(self, place, changed_creature):
         self.creatures[place] = changed_creature
+
+    def get_state_in_place(self, place):
+        return self.board[place]
 
     def print_board(self):
         """

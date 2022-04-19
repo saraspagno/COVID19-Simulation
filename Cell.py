@@ -26,7 +26,7 @@ class Cell(object):
             self.generation_num = 1
         else:
             self.generation_num = 0
-        self.print_new_cell()
+        # self.print_new_cell(table)
 
     def find_new_place(self, move):
         """
@@ -55,6 +55,7 @@ class Cell(object):
         :return:
         """
         new_x, new_y = self.find_new_place(move)
+        # while board.get_state_in_place([new_x,new_y]) != int(States.EMPTY):
         while board[new_x][new_y] != int(States.EMPTY):
             new_x, new_y = self.find_new_place(move)
         self.set_location(new_x, new_y)
@@ -80,7 +81,7 @@ class Cell(object):
                 for j in neighbors:
                     place_x = (self.place_x + i) % SIZE[1]
                     place_y = (self.place_y + j) % SIZE[0]
-                    if board[place_x, place_y] == int(States.SICK):
+                    if board.board[place_x, place_y] == int(States.SICK):
                         neighbors_sick += 1
             probability_of_infection = neighbors_sick * probability_of_infection
             weights = [1 - probability_of_infection, probability_of_infection]
@@ -103,5 +104,5 @@ class Cell(object):
     def get_location(self):
         return self.place_x, self.place_y
 
-    def print_new_cell(self):
-        print("new ", self.state, " at ", self.place_x, self.place_y, "with movement capabilities of ", self.range)
+    def print_new_cell(self, board):
+        print(len(board.creatures), "creatures, the newest is a  ", self.state.name, "cell at (", self.place_x, self.place_y, ") with movement capabilities of ", self.range)
