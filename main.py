@@ -22,10 +22,10 @@ def move(board):
     :param board: the board that contains the creatures and the board with the creatures's states
     :return: a new board with the new locations
     """
-    new_board = np.array([[States.EMPTY for i in range(SIZE[0])] for j in range(SIZE[1])])
+    new_board = Board.Board(sick_creatures=board.sick_creatures, creatures= board.creatures)
     for creature in board.creatures.values():
         creature.check_location(new_board, move=(-creature.range, creature.range))
-        new_board[creature.place_x, creature.place_y] = creature.state
+        new_board.change_state_in_cell([creature.place_x, creature.place_y],creature.state)
     return new_board
 
 
@@ -46,12 +46,14 @@ def generation(board):
         probability_of_infection = constant.P_1
     move(board)
     for creature in board.creatures.values():
-        creature.infect_by_neighbors_states(board.board, probability_of_infection)
+        change_in_number_of_infected = creature.infect_by_neighbors_states(board.board, probability_of_infection)
+        board.set_num_of_sick(board.sick_creatures + change_in_number_of_infected)
     show_board(board)
 
 
 if __name__ == '__main__':
     board = Board.Board(R=constant.R, N=constant.N, sick_creatures=constant.D)
+    board.initiate_board(R, N)
     gen = 0
     while True:
         print("Generation: ", gen)

@@ -69,6 +69,7 @@ class Cell(object):
         if self.state == States.SICK:
             if self.generation_num == constant.X:
                 self.state = States.RECOVERED
+                return -1
             else:
                 self.generation_num += 1
         elif self.state == States.HEALTHY:
@@ -82,7 +83,11 @@ class Cell(object):
                         neighbors_sick += 1
             probability_of_infection = neighbors_sick * probability_of_infection
             weights = [1 - probability_of_infection, probability_of_infection]
-            self.set_state(random.choices([States.HEALTHY, States.SICK], weights=weights, k=1))
+            state = random.choices([States.HEALTHY, States.SICK], weights=weights, k=1)
+            self.set_state(state)
+            if state == States.SICK:
+                return 1
+        return 0
 
     def set_state(self, state):
         self.state = state

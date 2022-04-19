@@ -20,16 +20,15 @@ class Board(object):
         sick_creatures: the number of sick creatures (the initial number is defined by D)
     """
 
-    def __init__(self, R=constant.R, N=constant.N, sick_creatures=constant.D):
+    def __init__(self, sick_creatures=constant.D, creatures= {}):
         """
         :param R: percentage of creatures that can move faster
         :param N: number of creatures
         :param sick_creatures: number of cells infected at start time (represented as D in the constants)
         """
-        self.creatures = {}
+        self.creatures = creatures
         self.board = np.array([[States.EMPTY for i in range(SIZE[0])] for j in range(SIZE[1])])
         self.sick_creatures = sick_creatures
-        self.initiate_board(R, N)
 
     def save(self):
         raise NotImplementedError
@@ -51,12 +50,25 @@ class Board(object):
         # initiate board with the drawn ranges where D creatures are sick and the rest are healthy
         for movement in movements[0:self.sick_creatures - 1]:
             cell = Cell.Cell(self.board, state=States.SICK, movement=movement)
-            self.board[cell.place_x, cell.place_y] = cell.state
-            self.creatures[(cell.place_x, cell.place_y)] = cell
+            self.change_state_in_cell([cell.place_x, cell.place_y], cell.state)
+            self.set_creatures_list([cell.place_x, cell.place_y], cell)
+            # self.board[cell.place_x, cell.place_y] = cell.state
+            # self.creatures[(cell.place_x, cell.place_y)] = cell
         for movement in movements[self.sick_creatures:]:
             cell = Cell.Cell(self.board, state=States.HEALTHY, movement=movement)
-            self.board[cell.place_x, cell.place_y] = cell.state
-            self.creatures[(cell.place_x, cell.place_y)] = cell
+            self.change_state_in_cell([cell.place_x, cell.place_y], cell.state)
+            self.set_creatures_list([cell.place_x, cell.place_y], cell)
+            # self.board[cell.place_x, cell.place_y] = cell.state
+            # self.creatures[(cell.place_x, cell.place_y)] = cell
+
+    def set_num_of_sick(self, new_num):
+        self.sick_creatures = new_num
+
+    def change_state_in_cell(self, place, new_state):
+        self.board[place] = new_state
+
+    def set_creatures_list(self, place, changed_creature):
+        self.creatures[place] = changed_creature
 
     def print_board(self):
         """
