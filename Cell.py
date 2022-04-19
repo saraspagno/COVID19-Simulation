@@ -22,7 +22,7 @@ class Cell(object):
         self.place_y = 0
         self.check_location(table, move=(0, SIZE[0]))
         self.state = state
-        if state == States.SICK:
+        if state == int(States.SICK):
             self.generation_num = 1
         else:
             self.generation_num = 0
@@ -55,8 +55,8 @@ class Cell(object):
         :return:
         """
         new_x, new_y = self.find_new_place(move)
-        while board[new_x][new_y] != States.EMPTY:
-            self.find_new_place(move)
+        while board[new_x][new_y] != int(States.EMPTY):
+            new_x, new_y = self.find_new_place(move)
         self.set_location(new_x, new_y)
 
     def infect_by_neighbors_states(self, board, probability_of_infection):
@@ -66,23 +66,25 @@ class Cell(object):
         :param probability_of_infection: either P_1 or P_2, depending on the percentage of sick
         :return:
         """
-        if self.state == States.SICK:
+        if self.state == int(States.SICK):
             if self.generation_num == constant.X:
+                self.state = int(States.RECOVERED)
                 self.state = States.RECOVERED
                 return -1
             else:
                 self.generation_num += 1
-        elif self.state == States.HEALTHY:
+        elif self.state == int(States.HEALTHY):
             neighbors = [-1, 0, 1]
             neighbors_sick = 0
             for i in neighbors:
                 for j in neighbors:
-                    place_x = self.place_x + i
-                    place_y = self.place_y + j
-                    if board[place_x, place_y] == States.SICK:
+                    place_x = (self.place_x + i) % SIZE[1]
+                    place_y = (self.place_y + j) % SIZE[0]
+                    if board[place_x, place_y] == int(States.SICK):
                         neighbors_sick += 1
             probability_of_infection = neighbors_sick * probability_of_infection
             weights = [1 - probability_of_infection, probability_of_infection]
+            self.set_state(random.choices([int(States.HEALTHY), int(States.SICK)], weights=weights, k=1)[0])
             state = random.choices([States.HEALTHY, States.SICK], weights=weights, k=1)
             self.set_state(state)
             if state == States.SICK:

@@ -78,7 +78,7 @@ class Board(object):
         for j in range(SIZE[0]):
             for i in range(SIZE[1]):
                 if self.board[i, j] is not None:
-                    print(self.board[i, j].state, end="|")
+                    print(self.board[i, j], end="|")
                 else:
                     print("None", end="|")
             print("\n")
