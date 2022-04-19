@@ -20,10 +20,9 @@ class Board(object):
         sick_creatures: the number of sick creatures (the initial number is defined by D)
     """
 
-    def __init__(self, sick_creatures=constant.D, creatures= {}):
+    def __init__(self, sick_creatures=constant.D, creatures={}):
         """
-        :param R: percentage of creatures that can move faster
-        :param N: number of creatures
+        :param creatures:
         :param sick_creatures: number of cells infected at start time (represented as D in the constants)
         """
         self.creatures = creatures

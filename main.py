@@ -24,7 +24,7 @@ def move(board):
     :param board: the board that contains the creatures and the board with the creatures's states
     :return: a new board with the new locations
     """
-    new_board = Board.Board(sick_creatures=board.sick_creatures, creatures= board.creatures)
+    new_board = Board.Board(sick_creatures=board.sick_creatures, creatures=board.creatures)
     for creature in board.creatures.values():
         creature.check_location(new_board, move=(-creature.range, creature.range))
         new_board.change_state_in_cell([creature.place_x, creature.place_y],creature.state)
@@ -58,7 +58,7 @@ def generation(d):
     return mat
 
 if __name__ == '__main__':
-    board = Board.Board(R=constant.R, N=constant.N, sick_creatures=constant.D)
+    board = Board.Board(sick_creatures=constant.D)
     board.initiate_board(R, N)
     gen = 0
     print("After init!")
