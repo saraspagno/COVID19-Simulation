@@ -26,7 +26,7 @@ class Cell(object):
             self.generation_num = 1
         else:
             self.generation_num = 0
-        # self.print_new_cell(table)
+        self.print_new_cell()
 
     def find_new_place(self, move):
         """
@@ -55,7 +55,6 @@ class Cell(object):
         :return:
         """
         new_x, new_y = self.find_new_place(move)
-        # while board.get_state_in_place([new_x,new_y]) != int(States.EMPTY):
         while board[new_x][new_y] != int(States.EMPTY):
             new_x, new_y = self.find_new_place(move)
         self.set_location(new_x, new_y)
@@ -70,8 +69,6 @@ class Cell(object):
         if self.state == int(States.SICK):
             if self.generation_num == constant.X:
                 self.state = int(States.RECOVERED)
-                self.state = States.RECOVERED
-                return -1
             else:
                 self.generation_num += 1
         elif self.state == int(States.HEALTHY):
@@ -81,16 +78,11 @@ class Cell(object):
                 for j in neighbors:
                     place_x = (self.place_x + i) % SIZE[1]
                     place_y = (self.place_y + j) % SIZE[0]
-                    if board.board[place_x, place_y] == int(States.SICK):
+                    if board[place_x, place_y] == int(States.SICK):
                         neighbors_sick += 1
             probability_of_infection = neighbors_sick * probability_of_infection
             weights = [1 - probability_of_infection, probability_of_infection]
             self.set_state(random.choices([int(States.HEALTHY), int(States.SICK)], weights=weights, k=1)[0])
-            state = random.choices([States.HEALTHY, States.SICK], weights=weights, k=1)
-            self.set_state(state)
-            if state == States.SICK:
-                return 1
-        return 0
 
     def set_state(self, state):
         self.state = state
@@ -104,5 +96,5 @@ class Cell(object):
     def get_location(self):
         return self.place_x, self.place_y
 
-    def print_new_cell(self, board):
-        print(len(board.creatures), "creatures, the newest is a  ", self.state.name, "cell at (", self.place_x, self.place_y, ") with movement capabilities of ", self.range)
+    def print_new_cell(self):
+        print("new ", self.state, " at ", self.place_x, self.place_y, "with movement capabilities of ", self.range)
