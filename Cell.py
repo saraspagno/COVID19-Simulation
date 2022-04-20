@@ -66,9 +66,11 @@ class Cell(object):
         :param probability_of_infection: either P_1 or P_2, depending on the percentage of sick
         :return:
         """
+        grid = board.board
         if self.state == int(States.SICK):
             if self.generation_num == constant.X:
                 self.state = int(States.RECOVERED)
+                board.sick_creatures -= 1
             else:
                 self.generation_num += 1
         elif self.state == int(States.HEALTHY):
@@ -78,11 +80,14 @@ class Cell(object):
                 for j in neighbors:
                     place_x = (self.place_x + i) % SIZE[1]
                     place_y = (self.place_y + j) % SIZE[0]
-                    if board[place_x, place_y] == int(States.SICK):
+                    if grid[place_x, place_y] == int(States.SICK):
                         neighbors_sick += 1
             probability_of_infection = neighbors_sick * probability_of_infection
             weights = [1 - probability_of_infection, probability_of_infection]
-            self.set_state(random.choices([int(States.HEALTHY), int(States.SICK)], weights=weights, k=1)[0])
+            new_state = random.choices([int(States.HEALTHY), int(States.SICK)], weights=weights, k=1)[0]
+            if new_state == int(States.SICK):
+                board.sick_creatures += 1
+            self.set_state(new_state)
 
     def set_state(self, state):
         self.state = state

@@ -70,3 +70,6 @@ class Board(object):
                 else:
                     print("None", end="|")
             print("\n")
+
+
+
