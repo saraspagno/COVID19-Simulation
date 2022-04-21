@@ -26,7 +26,7 @@ class Cell(object):
             self.generation_num = 1
         else:
             self.generation_num = 0
-        self.print_new_cell()
+        # self.print_new_cell()
 
     def find_new_place(self, move):
         """
@@ -59,18 +59,17 @@ class Cell(object):
             new_x, new_y = self.find_new_place(move)
         self.set_location(new_x, new_y)
 
-    def infect_by_neighbors_states(self, board, probability_of_infection):
+    def infect_by_neighbors_states(self, old_grid, new_board, probability_of_infection):
         """
         a function that decides whether a cell is infected according to a it's neighbors and a probability_of_infection
-        :param board: the board, in order to find all it's neighbors
+        :param board: the old board, in order to find all it's neighbors
         :param probability_of_infection: either P_1 or P_2, depending on the percentage of sick
         :return:
         """
-        grid = board.board
         if self.state == int(States.SICK):
             if self.generation_num == constant.X:
                 self.state = int(States.RECOVERED)
-                board.sick_creatures -= 1
+                new_board.sick_creatures -= 1
             else:
                 self.generation_num += 1
         elif self.state == int(States.HEALTHY):
@@ -80,13 +79,13 @@ class Cell(object):
                 for j in neighbors:
                     place_x = (self.place_x + i) % SIZE[1]
                     place_y = (self.place_y + j) % SIZE[0]
-                    if grid[place_x, place_y] == int(States.SICK):
+                    if old_grid[place_x, place_y] == int(States.SICK):
                         neighbors_sick += 1
             probability_of_infection = neighbors_sick * probability_of_infection
             weights = [1 - probability_of_infection, probability_of_infection]
             new_state = random.choices([int(States.HEALTHY), int(States.SICK)], weights=weights, k=1)[0]
             if new_state == int(States.SICK):
-                board.sick_creatures += 1
+                new_board.sick_creatures += 1
             self.set_state(new_state)
 
     def set_state(self, state):

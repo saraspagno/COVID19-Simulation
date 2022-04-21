@@ -20,16 +20,19 @@ class Board(object):
         sick_creatures: the number of sick creatures (the initial number is defined by D)
     """
 
-    def __init__(self, R=constant.R, N=constant.N, sick_creatures=constant.D):
+    def __init__(self, R=constant.R, N=constant.N, D=constant.D, grid=None):
         """
         :param R: percentage of creatures that can move faster
         :param N: number of creatures
-        :param sick_creatures: number of cells infected at start time (represented as D in the constants)
+        :param sick_creatures: percentage of cells infected at start time (represented as D in the constants)
         """
         self.creatures = {}
-        self.board = np.array([[int(States.EMPTY) for i in range(SIZE[0])] for j in range(SIZE[1])])
-        self.sick_creatures = sick_creatures
-        self.initiate_board(R, N)
+        self.sick_creatures = int((D * N) / 100)
+        if grid is None:
+            self.grid = np.array([[int(States.EMPTY) for i in range(SIZE[0])] for j in range(SIZE[1])])
+            self.initiate_board(R, N)
+        else:
+            self.grid = grid
 
     def save(self):
         raise NotImplementedError
@@ -48,15 +51,21 @@ class Board(object):
         # draw random ranges for N creatures according to R (percentage of creatures that can move faster)
         movements = random.choices([REGULAR_MOVEMENT, FASTER_MOVEMENT], weights=[1 - R, R], k=N)
 
-        # initiate board with the drawn ranges where D creatures are sick and the rest are healthy
-        for movement in movements[0:self.sick_creatures - 1]:
-            cell = Cell.Cell(self.board, state=int(States.SICK), movement=movement)
-            self.board[cell.place_x, cell.place_y] = cell.state
+        # initiate board with the drawn ranges where sick_creatures are sick and the rest are healthy
+        for movement in movements[0:self.sick_creatures]:
+            cell = Cell.Cell(self.grid, state=int(States.SICK), movement=movement)
+            self.grid[cell.place_x, cell.place_y] = cell.state
             self.creatures[(cell.place_x, cell.place_y)] = cell
         for movement in movements[self.sick_creatures:]:
-            cell = Cell.Cell(self.board, state=int(States.HEALTHY), movement=movement)
-            self.board[cell.place_x, cell.place_y] = cell.state
+            cell = Cell.Cell(self.grid, state=int(States.HEALTHY), movement=movement)
+            self.grid[cell.place_x, cell.place_y] = cell.state
             self.creatures[(cell.place_x, cell.place_y)] = cell
+
+    def create_copy(self, new_grid):
+        new_board = Board(grid=new_grid)
+        new_board.sick_creatures = self.sick_creatures
+        new_board.creatures = self.creatures
+        return new_board
 
     def print_board(self):
         """
@@ -65,8 +74,8 @@ class Board(object):
         """
         for j in range(SIZE[0]):
             for i in range(SIZE[1]):
-                if self.board[i, j] is not None:
-                    print(self.board[i, j], end="|")
+                if self.grid[i, j] is not None:
+                    print(self.grid[i, j], end="|")
                 else:
                     print("None", end="|")
             print("\n")
