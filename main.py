@@ -36,7 +36,7 @@ def show_board(grid):
     blue_recovered = Line2D([], [], marker="s", markersize=5, linewidth=0, color="b")
     ax1.legend((white_empty, green_healthy, red_infected, blue_recovered),
                ('Empty', 'Healthy', 'Infected', 'Recovered'),
-               loc='upper left')
+               bbox_to_anchor=(1.1, 1.05))
 
     cmap = ListedColormap(['w', 'g', 'r', 'b'])
     mat1 = ax1.matshow(grid, cmap=cmap)
