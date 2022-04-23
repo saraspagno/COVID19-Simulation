@@ -5,9 +5,11 @@ import Board
 import constant
 import Console
 
+import matplotlib
 from matplotlib.lines import Line2D
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+matplotlib.use('qt5agg')
 
 SIZE = constant.SIZE
 States = constant.States
@@ -41,6 +43,11 @@ def show_board(grid):
     ax1.text(0.91, 0.5, parameters, fontsize=6, transform=plt.gcf().transFigure)
     ax1.set_title("COVID-19 Cellular Automata Simulation")
 
+    mngr = plt.get_current_fig_manager()
+    geom = mngr.window.geometry()
+    x, y, dx, dy = geom.getRect()
+    mngr.window.setGeometry(50, 100, dx, dy)
+
     # Second graph - infected
     global infected
     infected = [(constant.D / constant.N) * 100]
@@ -60,6 +67,8 @@ def show_board(grid):
     ax3.set_ylabel("Percentage of infected")
     ax3.set_title("Percentage of Infected per Generation")
     ax3.text(0.91, 0.5, parameters, fontsize=6, transform=plt.gcf().transFigure)
+    mngr = plt.get_current_fig_manager()
+    mngr.window.setGeometry(dx, 100, dx, dy)
 
     ani1 = animation.FuncAnimation(fig3, generation, fargs=(mat1, ax2, ax3), frames=150, interval=40, save_count=50,
                                    repeat=False)
@@ -103,12 +112,10 @@ def generation(d, mat1, ax2, ax3):
         if constant.P != constant.P_2:
             constant.P = constant.P_2
             constant.T = constant.T - constant.C
-        print(f'HIGH PERCENTAGE: {percentage}, LOW PROBABILITY: {constant.P}, THRESHOLD: {constant.T}')
     else:
         if constant.P != constant.P_1:
             constant.P = constant.P_1
             constant.T = constant.T + constant.C
-        print(f'LOW PERCENTAGE: {percentage}, HIGH PROBABILITY: {constant.P}, THRESHOLD: {constant.T}')
     new_grid = move()
     new_board = board.create_copy(new_grid)
     for creature in new_board.creatures.values():
