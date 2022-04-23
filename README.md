@@ -21,5 +21,16 @@ T  # threshold value for the change of P as a function of the disease state     
 ```
 
 When starting the program, you will be prompt with a console. There you can choose wether to enter your parameters or continue with our pre-chosen ones.
-Follow the instructions in the console strictly, and input only legal values.
+**Follow the instructions in the console strictly, and input only legal values.**
+
+The pre-chosen parameters are:
+```
+N = 8000
+D = 0.1
+R = 10
+X = 8
+P_1 = 0.2
+P_2 = 0.1
+T = 8
+```
 
