@@ -1,17 +1,13 @@
 import numpy as np
-import copy
 from matplotlib.colors import ListedColormap
 
 import Board
 import constant
+import Console
 
-import matplotlib.cm as cm
-import matplotlib
 from matplotlib.lines import Line2D
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-
-matplotlib.use('Qt5Agg')
 
 SIZE = constant.SIZE
 States = constant.States
@@ -19,14 +15,19 @@ REGULAR_MOVEMENT = constant.REGULAR_MOVEMENT
 FASTER_MOVEMENT = constant.FASTER_MOVEMENT
 
 
-def show_board(board):
-    # First graph - animation
-    grid = board.grid
-    grid[0, 0] = 3
+def show_board(grid):
+    """
+    this method show the animation and graphs of the simulation
+    :param grid: the grid to show
+    """
+    # creating string with parameters to add to graphs
+    parameters = f"N = {constant.N}\nD = {constant.D}\nR = {constant.R}\nX = {constant.X}\nP_1 = {constant.P_1}\nP_2 = {constant.P_2}\nT = {constant.T}\n "
 
+    # First graph - animation
+    grid[0, 0] = 3
     fig1, ax1 = plt.subplots()
     ax1.axis('off')
-
+    # legend for first graph
     white_empty = Line2D([], [], marker="s", markersize=5, linewidth=0, color="w")
     green_healthy = Line2D([], [], marker="s", markersize=5, linewidth=0, color="g")
     red_infected = Line2D([], [], marker="s", markersize=5, linewidth=0, color="r")
@@ -37,31 +38,42 @@ def show_board(board):
 
     cmap = ListedColormap(['w', 'g', 'r', 'b'])
     mat1 = ax1.matshow(grid, cmap=cmap)
-
-    figManager = plt.get_current_fig_manager()
-    figManager.window.showMaximized()
+    ax1.text(0.91, 0.5, parameters, fontsize=6, transform=plt.gcf().transFigure)
+    ax1.set_title("COVID-19 Cellular Automata Simulation")
 
     # Second graph - infected
-
     global infected
-    infected = [constant.D]
+    infected = [(constant.D / constant.N) * 100]
     fig2 = plt.figure()
     ax2 = fig2.add_subplot(1, 1, 1)
     ax2.set_xlabel("Generations")
-    ax2.set_ylabel("Infected")
+    ax2.set_ylabel("Number of infected")
     ax2.set_title("Number of Infected per Generation")
-    ani2 = animation.FuncAnimation(fig2, generation, fargs=(mat1, ax2), frames=200, interval=40, save_count=50,
+    ax2.text(0.91, 0.5, parameters, fontsize=6, transform=plt.gcf().transFigure)
+
+    # Third graph - infected percentage over available population
+    global infected_per
+    infected_per = [constant.D]
+    fig3 = plt.figure()
+    ax3 = fig3.add_subplot(1, 1, 1)
+    ax3.set_xlabel("Generations")
+    ax3.set_ylabel("Percentage of infected")
+    ax3.set_title("Percentage of Infected per Generation")
+    ax3.text(0.91, 0.5, parameters, fontsize=6, transform=plt.gcf().transFigure)
+
+    ani1 = animation.FuncAnimation(fig3, generation, fargs=(mat1, ax2, ax3), frames=150, interval=40, save_count=50,
                                    repeat=False)
-    ani = animation.FuncAnimation(fig1, generation, fargs=(mat1, ax2), frames=200, interval=40, save_count=50,
-                                  repeat=False)
+    ani2 = animation.FuncAnimation(fig2, generation, fargs=(mat1, ax2, ax3), frames=150, interval=40, save_count=50,
+                                   repeat=False)
+    ani3 = animation.FuncAnimation(fig1, generation, fargs=(mat1, ax2, ax3), frames=150, interval=40, save_count=50,
+                                   repeat=False)
 
     plt.show()
 
 
-def move(board):
+def move():
     """
     this method moves all creatures on the board
-    :param board: the board that contains the creatures and the board with the creatures's states
     :return: a new board with the new locations
     """
     new_grid = np.array([[States.EMPTY for i in range(SIZE[0])] for j in range(SIZE[1])])
@@ -71,7 +83,7 @@ def move(board):
     return new_grid
 
 
-def generation(d, mat1, ax2):
+def generation(d, mat1, ax2, ax3):
     """
     this method represents a generation in the population's life
         in each generation the creatures move (according to their movement capabilities)
@@ -79,31 +91,45 @@ def generation(d, mat1, ax2):
             from sick to recovered after 10 generations
             from healthy to sick according to it's neighbors
     :param d: standard for animation
+    :param mat1: simulation for animation
+    :param ax2: infected graph for animation
+    :param ax3: percentage of infected graph for animation
     :return:
     """
     global board
-    percentage = (board.sick_creatures / constant.N) * 100
+    percentage = (board.sick_creatures / (constant.N - board.recovered)) * 100
     # example: if more than 10% infected, then P_2 (the lowest)
     if percentage > constant.T:
-        print(f"HIGH PERCENTAGE: {percentage}, LOW PROBABILITY: {constant.P_2}")
-        probability_of_infection = constant.P_2
+        if constant.P != constant.P_2:
+            constant.P = constant.P_2
+            constant.T = constant.T - constant.C
+        print(f'HIGH PERCENTAGE: {percentage}, LOW PROBABILITY: {constant.P}, THRESHOLD: {constant.T}')
     else:
-        print(f"LOW PERCENTAGE: {percentage}, HIGH PROBABILITY: {constant.P_1}")
-        probability_of_infection = constant.P_1
-    new_grid = move(board)
+        if constant.P != constant.P_1:
+            constant.P = constant.P_1
+            constant.T = constant.T + constant.C
+        print(f'LOW PERCENTAGE: {percentage}, HIGH PROBABILITY: {constant.P}, THRESHOLD: {constant.T}')
+    new_grid = move()
     new_board = board.create_copy(new_grid)
     for creature in new_board.creatures.values():
-        creature.infect_by_neighbors_states(board.grid, new_board, probability_of_infection)
+        creature.infect_by_neighbors_states(board.grid, new_board, constant.P)
 
     # adding to global for graph
-    infected.append(new_board.sick_creatures)
-    ax2.plot(infected, 'b')
+    if new_board.sick_creatures != 0:
+        infected.append(new_board.sick_creatures)
+    ax2.plot(infected, color='#25666F')
+    ax2.fill_between([i for i in range(len(infected))], infected, color='#25666F')
+    percentage = (new_board.sick_creatures / (constant.N - new_board.recovered)) * 100
+    if percentage != 0:
+        infected_per.append((new_board.sick_creatures / (constant.N - new_board.recovered)) * 100)
+    ax3.plot(infected_per, 'r')
+    ax3.fill_between([i for i in range(len(infected_per))], infected_per, color='#FC494F')
     mat1.set_data(new_board.grid)
     board = new_board
     return mat1
 
-
 if __name__ == '__main__':
+    Console.start_console()
+    print(constant.these_parameters)
     board = Board.Board(R=constant.R, N=constant.N, D=constant.D)
-    print("After init!")
-    show_board(board)
+    show_board(board.grid)
