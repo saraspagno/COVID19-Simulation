@@ -11,7 +11,7 @@ You can run this program as any python file in your pc. As follows:
 
 1. Download this repository into a folder in your pc.
 2. Enter the folder, and type: `pip install -r requirements.txt`
-3. Now, simply run: `python main.py` within the project folder.
+3. Now, simply run: `python main.py` within the project folder, no args required.
 
 ## Parameters
 There are various parameters included in this project. You can read about them in the report.pdf included in the directory. Shortly, they are:
@@ -25,7 +25,7 @@ P_2  # probability of infection during high infections (low)
 T  # threshold value for the change of P as a function of the disease state           0 <= T <= 100
 ```
 
-When starting the program, you will be prompt with a console. There you can choose wether to enter your parameters or continue with our pre-chosen ones.
+When starting the program, you will be prompt with a console. All the parameteres will be provided as text input. The instructions on which parameters are needed and how are provided during the program. There is also an option to run the program with pre-chosen parameters.
 **Follow the instructions in the console strictly, and input only legal values.**
 
 The pre-chosen parameters are:
