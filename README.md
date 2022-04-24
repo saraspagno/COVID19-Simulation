@@ -7,6 +7,11 @@ The whole project is written in python.
 The cellular automata is represented by a `numpy` array. The simulation and the graphs are animated troughout the simulation using the `matplolib` library.
 
 ## Running the program
+You can run this program as any python file in your pc. As follows:
+
+1. Download this repository into a folder in your pc.
+2. Enter the folder, and type: `pip install -r requirements.txt`
+3. Now, simply run: `python main.py` within the project folder.
 
 ## Parameters
 There are various parameters included in this project. You can read about them in the report.pdf included in the directory. Shortly, they are:
