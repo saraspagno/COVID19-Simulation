@@ -49,6 +49,7 @@ class Cell(object):
         :return:
         """
         new_x, new_y = self.find_new_place(move)
+        """To make sure 2 creatures don't occupy the same space"""
         while board[new_x][new_y] != int(States.EMPTY):
             new_x, new_y = self.find_new_place(move)
         self.set_location(new_x, new_y)
