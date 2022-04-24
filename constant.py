@@ -1,19 +1,5 @@
 from enum import IntEnum
 
-hello_string = """ 
-******* Hello, welcome to this COVID-19 Cellular Automata Simulation! *******
-The simulation is run on a 200*200 grid. Before we start, we need some parameters!
-"""
-
-enter_parameters = "Press ENTER if you wish to continue with our pre-chosen parameters, or press SPACE+ENTER to choose your own. "
-enter_N = "Please type the value of N, the number of creatures. N must be a natural number between 0 and 40,000. "
-enter_D = "Please type the value of D, the percentage of infected at start time. D must be a natural number between 0 and 100. "
-enter_R = "Please type the value of R, the percentage of creatures that move faster. R must be a natural number between 0 and 100. "
-enter_X = "Please type the value of X, the number of generations. X must be a natural number greater than 1. "
-enter_P_1 = "Please type the value of P_1, the high probability of infection. P_1 must be between 0 and 1. "
-enter_P_2 = "Please type the value of P_2, the low probability of infection. P_1 must be between 0 and 1. "
-enter_T = "Please type the value of T, the threshold for changing probability of infection. T must bemust be a natural number between 0 and 100. "
-
 '''
 some global parameters:
     SIZE - the size of the board
