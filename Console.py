@@ -12,7 +12,7 @@ enter_R = "Please type the value of R, the percentage of creatures that move fas
 enter_X = "Please type the value of X, the number of generations. X must be a natural number greater than 1. "
 enter_P_1 = "Please type the value of P_1, the high probability of infection. P_1 must be between 0 and 1. "
 enter_P_2 = "Please type the value of P_2, the low probability of infection. P_2 must be between 0 and 1. "
-enter_T = "Please type the value of T, the threshold for changing probability of infection. T must bemust be a natural number between 0 and 100. "
+enter_T = "Please type the value of T, the threshold for changing probability of infection. T must must be a natural number between 0 and 100. "
 
 
 def start_console():
