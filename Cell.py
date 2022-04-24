@@ -41,7 +41,7 @@ class Cell(object):
 
     def check_location(self, board, move):
         """
-        this function makes sure a location is not already occupied
+        this function makes sure a location is not already occupied, so that 2 creatures won't inhabit the same space at once
             it draws a random location
             and as long as the location is occupied it draws a new location
         :param board: the board where the creature is located
